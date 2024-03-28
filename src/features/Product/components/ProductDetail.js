@@ -16,6 +16,7 @@ const colors = [
   { name: 'Gray', class: 'bg-gray-200', selectedClass: 'ring-gray-400' },
   { name: 'Black', class: 'bg-gray-900', selectedClass: 'ring-gray-900' },
 ];
+
 const sizes = [
   { name: 'XXS', inStock: false },
   { name: 'XS', inStock: true },
@@ -46,7 +47,6 @@ export default function ProductDetail() {
   const params=useParams();
   const dispatch = useDispatch();
   const product = useSelector(selectProductById);
-  const user=useSelector(selectLoggedInUser)
   const items=useSelector(selectItems);
   const status = useSelector(selectProductListStatus);
 
@@ -61,12 +61,11 @@ export default function ProductDetail() {
 
   const handleCart = (e) => {
     e.preventDefault();
-    if (items.findIndex((item) => item.product.id === product[0].id) < 0) {
+    if (items.findIndex((item) => item.product.id === product.id) < 0) {
       console.log({ items, product });
       const newItem = {
-        product: product[0],
+        product: product.id,
         quantity: 1,
-        user:user.id
       };
       if (selectedColor) {
         newItem.color = selectedColor;
@@ -133,35 +132,35 @@ export default function ProductDetail() {
         </nav>*/}
 
     {/* Image gallery */}
-    {product[0].images && (<div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
+    {product.images && (<div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
       <div className="aspect-h-4 aspect-w-3 hidden overflow-hidden rounded-lg lg:block">
       
         <img
-        src={product[0].images[0]}
-          alt={product[0].title}
+        src={product.images[0]}
+          alt={product.title}
           className="h-full w-full object-cover object-center"
         />
       </div>
       <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
         <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
           <img
-          src={product[0].images[1]}
-           alt={product[0].title}
+          src={product.images[1]}
+           alt={product.title}
             className="h-full w-full object-cover object-center"
           />
         </div>
         <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
           <img
-          src={product[0].images[2]}
-          alt={product[0].title}
+          src={product.images[2]}
+          alt={product.title}
             className="h-full w-full object-cover object-center"
           />
         </div>
       </div>
       <div className="aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden sm:rounded-lg">
         <img
-        src={product[0].images[3]}
-        alt={product[0].title}
+        src={product.images[3]}
+        alt={product.title}
           className="h-full w-full object-cover object-center"
         />
       </div>
@@ -170,17 +169,17 @@ export default function ProductDetail() {
     {/* Product info */}
     <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">
       <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{product[0].title}</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{product.title}</h1>
       </div>
 
       {/* Options */}
       <div className="mt-4 lg:row-span-3 lg:mt-0">
         <h2 className="sr-only">Product information</h2>
         <p className="text-xl line-through tracking-tight text-gray-900">
-                ${product[0].price}
+                ${product.price}
               </p>
               <p className="text-3xl tracking-tight text-gray-900">
-                ${discountedPrice(product[0])}
+                ${discountedPrice(product)}
               </p>
 
         {/* Reviews */}
@@ -192,14 +191,14 @@ export default function ProductDetail() {
                 <StarIcon
                   key={rating}
                   className={classNames(
-                    product[0].rating > rating ? 'text-gray-900' : 'text-gray-200',
+                    product.rating > rating ? 'text-gray-900' : 'text-gray-200',
                     'h-5 w-5 flex-shrink-0'
                   )}
                   aria-hidden="true"
                 />
               ))}
             </div>
-            <p className="sr-only">{product[0].rating} out of 5 stars</p>
+            <p className="sr-only">{product.rating} out of 5 stars</p>
           </div>
         </div>
 
@@ -319,7 +318,7 @@ export default function ProductDetail() {
           <h3 className="sr-only">Description</h3>
 
           <div className="space-y-6">
-            <p className="text-base text-gray-900">{product[0].description}</p>
+            <p className="text-base text-gray-900">{product.description}</p>
           </div>
         </div>
 
@@ -341,7 +340,7 @@ export default function ProductDetail() {
           <h2 className="text-sm font-medium text-gray-900">Details</h2>
 
           <div className="mt-4 space-y-6">
-            <p className="text-sm text-gray-600">{product[0].description}</p>
+            <p className="text-sm text-gray-600">{product.description}</p>
           </div>
         </div>
       </div>

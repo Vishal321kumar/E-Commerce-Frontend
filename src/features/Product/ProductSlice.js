@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { fetchAllProducts, fetchProductById ,fetchBrands,fetchCategories,fetchProductsByFilter, createProduct, updateProduct} from './ProductApi';
+import {  fetchProductById ,fetchBrands,fetchCategories,fetchProductsByFilter, createProduct, updateProduct} from './ProductApi';
 
 const initialState = {
   products: [],
@@ -11,20 +11,6 @@ const initialState = {
 };
 
 
-// The function below is called a thunk and allows us to perform async logic. It
-// can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
-// will call the thunk with the `dispatch` function as the first argument. Async
-// code can then be executed and other actions can be dispatched. Thunks are
-// typically used to make async requests.
-
-export const fetchAllProductsAsync = createAsyncThunk(
-  'product/fetchAllProducts',
-  async () => {
-    const response = await fetchAllProducts();
-    // The value we return becomes the `fulfilled` action payload
-    return response.data;
-  }
-);
 
 export const fetchProductByIdAsync = createAsyncThunk(
   'product/fetchProductById',
@@ -36,9 +22,9 @@ export const fetchProductByIdAsync = createAsyncThunk(
 
 export const fetchProductsByFiltersAsync = createAsyncThunk(
   'product/fetchProductsByFilter',
-  async({filter,sort,pagination}) => {
+  async({filter,sort,pagination,admin}) => {
     console.log('slice working')
-    const response = await fetchProductsByFilter(filter,sort,pagination);
+    const response = await fetchProductsByFilter(filter,sort,pagination,admin);
     // The value we return becomes the `fulfilled` action payload
     return response.data;
   }
@@ -90,13 +76,6 @@ export const productSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAllProductsAsync.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(fetchAllProductsAsync.fulfilled, (state, action) => {
-        state.status = 'idle';
-        state.products = action.payload;
-      })
       .addCase(fetchProductsByFiltersAsync.pending, (state) => {
         state.status = 'loading';
       })

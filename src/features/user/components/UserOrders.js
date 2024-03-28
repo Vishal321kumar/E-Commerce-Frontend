@@ -7,23 +7,19 @@ import { selectUserOrders,
   selectUserInfo,
   selectUserInfoStatus,
   } from '../userSlice';
-import { selectLoggedInUser } from '../../auth/authSlice';
+
 
 export default function UserOrders() {
 
   const dispatch = useDispatch();
   const orders = useSelector(selectUserOrders);
   const status = useSelector(selectUserInfoStatus);
-  const user =useSelector(selectUserInfo)
   
 
-  // delay in dispatch of orders otherwise fine params in useeffect
-  //infinite calls  both resolved
 
   useEffect(() => {
-    console.log('dispatch user orders',orders)
-    dispatch(fetchLoggedInUserOrderAsync(user.id));
-  }, [dispatch,user.id]);
+    dispatch(fetchLoggedInUserOrderAsync());
+  }, [dispatch]);
 
   return (
     <div>

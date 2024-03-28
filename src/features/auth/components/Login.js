@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  checkUserAsync,
+  loginUserAsync,
   selectError,
   selectLoggedInUser,
 } from '../authSlice';
@@ -40,7 +40,7 @@ export default function Login() {
       <form noValidate
                   onSubmit={handleSubmit((data) => {
                     dispatch(
-                      checkUserAsync({ email: data.email, password: data.password })
+                      loginUserAsync({ email: data.email, password: data.password })
                     );
                   })} className="space-y-6" >
         <div>
@@ -96,7 +96,7 @@ export default function Login() {
                   <p className="text-red-500">{errors.password.message}</p>
                 )}
               </div>
-              {error && <p className="text-red-500">{ error.message}</p>}
+              {error && <p className="text-red-500">{ error || error.message }</p>}
             </div>
 
             <div>

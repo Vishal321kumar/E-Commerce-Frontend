@@ -16,7 +16,7 @@ import Checkout from "./features/Pages/Checkout";
 import ProductDetailPage from "./features/Pages/ProductDetailPage";
 import Protected from "./features/auth/components/Protected";
 import { useDispatch, useSelector } from "react-redux";
-import { selectLoggedInUser } from "./features/auth/authSlice";
+import { checkAuthAsync, selectLoggedInUser, selectUserChecked } from "./features/auth/authSlice";
 import { fetchItemsByUserIdAsync } from "./features/cart/cartSlice";
 import PageNotFound from "./features/Pages/404";
 import OrderSuccessPage from "./features/Pages/OrderSuccessPage";
@@ -33,6 +33,7 @@ import ProtectedAdmin from "./features/auth/components/ProtectedAdmin";
 import AdminHome from "./features/Pages/AdminHome";
 import { positions, Provider } from 'react-alert';
 import AlertTemplate from 'react-alert-template-basic';
+import StripeCheckout from "./features/Pages/StripeCheckout";
 
 
 
@@ -107,15 +108,29 @@ const router = createBrowserRouter([
   },
   {
     path: "/order-success/:id",
-    element: <OrderSuccessPage></OrderSuccessPage>,
+    element: <Protected>
+       <OrderSuccessPage></OrderSuccessPage>{' '}
+      </Protected>
   },
   {
     path: "/my-orders",
-    element: <UserOrdersPage/>,
+    element:   <Protected>
+            <UserOrdersPage/>{' '}
+            </Protected>
   },
   {
     path: "/profile",
-    element: <UserProfilePage></UserProfilePage>
+    element: <Protected>
+    <UserProfilePage></UserProfilePage>{' '}
+    </Protected> 
+  },
+  {
+    path: '/stripe-checkout/',
+    element: (
+      <Protected>
+        <StripeCheckout></StripeCheckout>
+      </Protected>
+    ),
   },
   {
     path: "/forgot-password",
@@ -130,23 +145,24 @@ const router = createBrowserRouter([
 function App() {
 
 
-  // here this does not works selectuserinfo dunno why
-  // maybe early calling isuue ya kuch 
 
 
   const dispatch=useDispatch();
   // const user=useSelector(selectUserInfo);
   const user=useSelector(selectLoggedInUser);
+  const userChecked = useSelector(selectUserChecked);
 
 
-
-
+  useEffect(() => {
+    dispatch(checkAuthAsync());
+  }, [dispatch]);
 
 
   useEffect(()=>{
     if(user){
-      dispatch(fetchLoggedInUserAsync(user.id))
-      dispatch(fetchItemsByUserIdAsync(user.id))
+      dispatch(fetchItemsByUserIdAsync())
+      // we can get req.user by token on backend so no need to give in front-end
+      dispatch(fetchLoggedInUserAsync())
     }
   },[dispatch,user])
 
@@ -154,9 +170,12 @@ function App() {
   return (
     <>
       <div className="App">
-      <Provider template={AlertTemplate} {...options}>
+      {userChecked && (
+        <Provider template={AlertTemplate} {...options}>
         <RouterProvider router={router} />
       </Provider>
+        )}
+      
         
         {/*  {userChecked && (
                          upr will come here    )}

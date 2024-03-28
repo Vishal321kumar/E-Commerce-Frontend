@@ -1,9 +1,7 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  fetchAllProductsAsync,
   selectAllProducts,
-  fetchProductsByFilterAsync,
   selectTotalItems,
   selectCategories,
   selectBrands,
@@ -61,7 +59,6 @@ export default function ProductList() {
   const status = useSelector(selectProductListStatus);
 
 
-  // console.log(totalItems)
   const filters = [
     {
       id: "category",
@@ -131,9 +128,6 @@ export default function ProductList() {
     dispatch(fetchCategoriesAsync());
   },[])
   
-
-
-
 
 
 
